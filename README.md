@@ -21,3 +21,9 @@ using image subtraction again, we compute a centroid of a live camera feed that 
 
 
 # Algorithm 2: ##### Tracking
+
+**Algorithm summary**
+
+**Concerns/ limitations**
+
+# GUI 
