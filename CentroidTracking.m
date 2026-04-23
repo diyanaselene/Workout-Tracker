@@ -6,7 +6,7 @@ clc
 %      2-MATLAB Support Package for USB Webcams 
 
 % ---- Summary of algorithim ----
-% 1. take 3 images background, up, and down positions of push up
+% 1. take 3 images background, up, and down positions of workout up
 % 2. use image subtraction to get centroids of up and down pos
 % 3. use image subtraction on live video to show movement & track centroid
 % 4. once the moving centroid reaches threshold of down then Up centroids
@@ -41,9 +41,7 @@ for i = 1:3
 end
 
 disp("--- calibration complete---")
-imgBack = calibratedImages{1};
-%imgUP = calibImages{2}; %unused but for clarity
-%imgDown = calibImages{3}; %unused but for clarity
+imgBack = calibratedImages{1}; %2 is up 3 is down
 %--- get centroids of Up and Down
 for i = 2:3
     % image Subtraction
@@ -60,11 +58,11 @@ centroidUpY = centroids(2, 2);
 centroidDownY = centroids(3, 2);
 fprintf("target y : %2.f", centroidUpY)
 fprintf("target X : %2.f", centroidDownY)
+clear cam;
 %% Live application 
-
-pushUpCount = 0;
+workoutCount = 0;
 atBottom = false; %need to ensure they go down then up to count
-pushUpThreshold = 20; %pixel threshold for how close you can be to count
+workoutThreshold = 20; %pixel threshold for how close you can be to count
 while true
     currFrame = snapshot(cam);
     CFGray = rgb2gray(currFrame);
@@ -77,33 +75,34 @@ while true
     %Centroid tracking
     stats2 = regionprops(bwF,'Centroid','Area');
     if ~isempty(stats2)
-        %find largest moving area (person)
+        %find largest moving area (assumed to be the person)
         [~, id] = max([stats2.Area]);
         currCentroid = stats2(id).Centroid;
         currY = currCentroid(2); %vertical cord
         
-        %handle logic for counting pushups ensuring down then up to count
-        if ~atBottom &&(currY >= (centroidDownY - pushUpThreshold))
+        %handle logic for counting ensuring down then up to count
+        if ~atBottom &&(currY >= (centroidDownY - workoutThreshold))
             atBottom = true; %set to true
             disp("reached bottom")
         end
 
-        if atBottom && (currY <=(centroidUpY+pushUpThreshold))
-            pushUpCount = pushUpCount+1;
+        if atBottom && (currY <=(centroidUpY+workoutThreshold))
+            workoutCount = workoutCount+1;
             atBottom = false; %reset
-            fprintf("Push ups: %d\n", pushUpCount);
+            fprintf("Workount Count: %d\n", workoutCount);
         end
         
         %--- display on screen the centroid and target positions
         imshow(currFrame);
         hold on;
         plot(currCentroid(1), currCentroid(2), 'r*', 'MarkerSize', 12);
-        yline(centroidUpY, 'g--', 'Up Target');
+        yline(centroidUpY, 'b--', 'Up Target');
         yline(centroidDownY, 'b--', 'Down Target');
         hold off;
     end
    drawnow();
 
 end
+clear cam;
 %% run after program ends to clear camera
 clear cam; %clear up cam 
