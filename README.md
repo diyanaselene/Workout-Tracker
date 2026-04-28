@@ -1,6 +1,6 @@
 # Summary
 
-This repository is the Final project for our Computer Vision class at Tarleton State University, Spring 2026. It incorporates two ways to track workouts without using 
+This repository is the Final Project for our Computer Vision class at Tarleton State University, Spring 2026. It incorporates two ways to track workouts without using 
 Machine Learning. There is code for live utilization of the 2 algorithms and A GUI to select one of the algorithms that will take in recorded/saved inputs to count.
 
 # Algorithm 1: Centroid Tracking
