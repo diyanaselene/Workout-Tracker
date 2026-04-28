@@ -5,7 +5,7 @@ Machine Learning. There is code for live utilization of the 2 algorithms and A G
 
 # Algorithm 1: Centroid Tracking
 The core mechanics of the algorithm are using image subtraction to find what changed in the image, saving its centroid. After saving a centroid for the up position and down position, we set a threshold around these centroids. 
-using image subtraction again, we compute a centroid of a live camera feed that will increment a value once it reaches both down and up thresholds.
+Using image subtraction again, we compute a centroid of a live camera feed that will increment a value once it reaches both down and up thresholds.
 
 **Algorithm summary**
 1. 3 images are required for calibrating the centroid tracking target points. (Background Image, Up position, Down position)
@@ -34,3 +34,4 @@ The Point Feature Matching Algorithm was used to locate and track the athlete's 
 * Because the algorithm reiterates every frame, video playback is slow so long videos may be slow to ptocess.
 
 # GUI 
+Combines both algorithms in a MATLAB Application. Giving the option to choose between a live application or Recorded video. 
