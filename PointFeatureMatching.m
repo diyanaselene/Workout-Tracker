@@ -4,8 +4,6 @@ clc;
 %read the reference video
 video = VideoReader("workout.mov");
 
-scale = 0.5; % <<< ADDED: resize factor
-
 %read first frame and convert to grayscale
 firstFrame = read(video,1);
 ffGray = rgb2gray(firstFrame);
@@ -37,15 +35,12 @@ yMin = fullBody(2) + fullBody(4);
 med = (yMax + yMin) / 2;
 
 %rep counting
+scale = 0.5; 
 yOffset = 80;
 repCount = 0;
 repState = 0;
 minFeatures = 3;
 
-%scale thresholds to match resized frame
-yMax_s = yMax * scale;
-med_s  = med * scale;
-yOffset_s = yOffset * scale;
 
 %% main loop
 
@@ -66,14 +61,10 @@ while hasFrame(video)
     
     %locate object using utative matches
     [tform, inlierIdx] = estgeotform2d(matchedAthletePoints, matchedcfgPoints, "affine");
-    inlierAthletePoints = matchedAthletePoints(inlierIdx, :);
     inliercfgPoints = matchedcfgPoints(inlierIdx, :);
     
-    %location of inlier points
-    locs = inliercfgPoints.Location;
-
-    % >>> ADDED: scale locations back to original coordinate space
-    locs = locs / scale;
+    %scale locations back to original coordinate space
+    locs = inliercfgPoints.Location / scale;
 
     %count features past threshold
     numUp = sum(locs(:, 2) < yMax + yOffset);
@@ -99,7 +90,7 @@ while hasFrame(video)
     imshow(currFrame);
     hold on;
 
-    % >>> ADDED: scale back for correct overlay on original frame
+    %scale back for correct overlay on original frame
     plot(inliercfgPoints.Location(:,1)/scale, ...
          inliercfgPoints.Location(:,2)/scale, ...
         'ro', 'MarkerSize', 5, 'LineWidth', 1);
