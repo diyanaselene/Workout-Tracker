@@ -3,7 +3,7 @@ clear
 clc
 % need Addons both found in the IDE/HOME/Addons
 %      1- Image Acquisition Toolbox 
-%      2-MATLAB Support Package for USB Webcams 
+%      2- MATLAB Support Package for USB Webcams 
 
 % ---- Summary of algorithim ----
 % 1. take 3 images background, up, and down positions of workout up
@@ -42,10 +42,12 @@ end
 
 disp("--- calibration complete---")
 imgBack = calibratedImages{1}; %2 is up 3 is down
+diffImages = cell(1,2);
 %--- get centroids of Up and Down
 for i = 2:3
     % image Subtraction
-    diff = abs(double(calibratedImages{i}) - double(imgBack));
+    %diff = abs(double(calibratedImages{i}) - double(imgBack));
+    diff = abs(double(imgBack)-double(calibratedImages{i}) );
     bw = diff > 50; % Adjust threshold depending
     bw = bwareafilt(bw, 1); % Keep only the largest object (the person)
     
@@ -53,13 +55,30 @@ for i = 2:3
     if ~isempty(stats)
         centroids(i, :) = stats(1).Centroid;
     end
+    diffImages{i} = bw;
 end
 centroidUpY = centroids(2, 2);  
 centroidDownY = centroids(3, 2);
 fprintf("target y : %2.f", centroidUpY)
 fprintf("target X : %2.f", centroidDownY)
 clear cam;
+
+%% This shows our up target image (not req)
+% imshow(diffImages{2})
+% hold on;
+% plot(centroids(2,1), centroids(2,2), 'r*', 'MarkerSize', 18,'LineWidth',3);
+% yline(centroidUpY, 'b--', 'Up Target','LineWidth',3,'FontSize',14);
+% hold off
+%% This shows our Down target image (not req)
+% %hold off
+% imshow(diffImages{3})
+% hold on;
+% plot(centroids(3,1), centroids(3,2), 'r*', 'MarkerSize',  18,'LineWidth',3);
+% yline(centroidDownY, 'b--', 'Down Target','LineWidth',3,'FontSize',14);
 %% Live application 
+%cam = webcam(1); %built in webcam
+%preview(cam);
+%%
 workoutCount = 0;
 atBottom = false; %need to ensure they go down then up to count
 workoutThreshold = 20; %pixel threshold for how close you can be to count
