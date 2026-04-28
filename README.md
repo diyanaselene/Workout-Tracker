@@ -19,11 +19,18 @@ using image subtraction again, we compute a centroid of a live camera feed that 
 * Similarly, any changes in light will interfere, as this affects the background
 * Adjust threshold for target centroids depending on need
 
-
-# Algorithm 2: ##### Tracking
+# Algorithm 2: Point Feature Matching Tracking
+The Point Feature Matching Algorithm was used to locate and track the athlete's head throughout a workout video. Using the ymin and height (used to determine median) of the athletes full body, an up and down threshold are determined based on adding an offset to the ymin and median. The features from every frame are used to determine if the athlete is in an UP or Down position. After completing a cycle of UP, Down, and UP, the rep counter is incremented.
 
 **Algorithm summary**
+1. The user draws a bounding box around the athlete's head in the first frame. The Point Feature Matching Algorithm detects and extracts features from the Head ROI.
+2. The user draws a second bounding box around the athlete's full body. The getrect function returns the ymin and height of the region, which is used, along with an offset, to determine the up and down threadhold.
+3. Each frame from the video undergoes Point Feature Matching with the Head ROI. Features determine if the athlete in the current scene is in UP or Down position.
+4. State machine tracks the athlete's movement cycle and increments the rep counter after a completed cycle. Reps are determined after completing a cycle of up, down, and up.
 
 **Concerns/ limitations**
+* Tracking accuracy can go down if the athletes head moves out of frame.
+* Camera movement or a dynamic background can introduce false feature matches
+* Because the algorithm reiterates every frame, video playback is slow so long videos may be slow to ptocess.
 
 # GUI 
