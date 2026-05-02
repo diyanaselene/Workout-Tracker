@@ -1,7 +1,7 @@
 # Summary
 
 This repository is the Final Project for our Computer Vision class at Tarleton State University, Spring 2026. It incorporates two ways to track workouts without using 
-Machine Learning. There is code for live utilization of the 2 algorithms and A GUI to select one of the algorithms that will take in recorded/saved inputs to count.
+Machine Learning. There is code for live utilization of the 2 algorithms and A GUI to select one of the algorithms that will take in a recorded video to count reps.
 
 # Algorithm 1: Centroid Tracking
 The core mechanics of the algorithm are using image subtraction to find what changed in the image, saving its centroid. After saving a centroid for the up position and down position, we set a threshold around these centroids. 
